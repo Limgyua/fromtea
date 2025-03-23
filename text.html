@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo&display=swap" rel="stylesheet"> <!-- Baloo 폰트 로드 -->
+    <style>
+        /* 로고 스타일 */
+        .logo-container {
+            padding-top: 40px; /* 로고 위쪽 여백 추가 */
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Baloo', sans-serif; /* Baloo 폰트 적용 */
+            font-weight: 500; /* 적당한 두께로 설정 */
+            line-height: 0.5; /* 줄 간격 조정 */
+            margin-top: 0; /* margin-top 제거 */
+        }
+
+        /* formtea 스타일 - 진한 글씨체 */
+        h1 .formtea {
+            font-weight: bold; /* formtea는 진한 글씨체 */
+            font-size: 2.5rem; /* 글자 크기 설정 */
+        }
+
+        /* 폼티 스타일 - 더 작은 크기 및 회색으로 변경 */
+        h1 span {
+            font-size: 1rem; /* "폼티" 글씨 크기 더 작게 */
+            color: #000000; /* 회색으로 색상 변경 */
+            display: block; /* 두 줄로 나누기 */
+        }
+
+        /* 헤더 스타일 */
+        .navbar-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            height: auto;
+            text-align: center;
+        }
+
+        /* 업로드 상자 스타일 */
+        .upload-box {
+            border: 2px dashed #ccc;
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 0;
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%; /* 1:1 비율로 유지 */
+            border-radius: 10px;
+            max-width: 100%; /* 화면 전체 너비 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .upload-box label {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 상자 중앙에 배치 */
+            text-align: center;
+            padding: 0; /* 여백 없앰 */
+            display: flex;
+            flex-direction: column; /* 아이콘과 텍스트를 세로로 정렬 */
+            align-items: center; /* 아이콘과 텍스트가 수평 중앙 정렬되도록 */
+            color: #949494; /* 불러오기 텍스트 색상 변경 */
+        }
+
+        .camera-icon {
+            font-size: 20px; /* 카메라 아이콘 크기 */
+            color: #949494; /* 진한 회색 */
+            margin-bottom: 20px; /* 카메라 아이콘과 텍스트 사이의 여백 */
+        }
+
+        .file-preview-container {
+            display: flex;
+            overflow-x: auto; /* 가로 스크롤 활성화 */
+            margin-top: 10px;
+        }
+
+        .file-preview-container img {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between; /* 좌우 나누기 */
+            align-items: flex-start; /* 상단 정렬 */
+            height: 100vh;
+            margin-top: 0; /* 여백 없앰 */
+        }
+
+        .container .col-md-6 {
+            flex: 1; /* 50%씩 차지하게 함 */
+        }
+
+        .file-info {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        /* 글쓰기 영역 스타일 */
+        .form-container {
+            padding: 20px;
+        }
+
+        .form-container h3 {
+            margin-bottom: 20px;
+        }
+
+        /* 자동 확장되는 텍스트 영역 스타일 */
+        textarea {
+            resize: none; /* 크기 조절 기능 제거 */
+            overflow-y: auto; /* 세로 스크롤 가능 */
+            min-height: 100px; /* 최소 높이 설정 */
+            height: auto; /* 높이 자동 설정 */
+            padding: 10px; /* 여백 추가 */
+        }
+
+        /* 버튼 스타일 */
+        .upload-btn {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* placeholder 텍스트 크기 작게 설정 */
+        #content::placeholder {
+            font-size: 0.9rem; /* 작은 글씨 크기 */
+            color: #777; /* 회색 텍스트 색상 */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Start -->
+    <div class="container-fluid bg-white px-0 fixed-top">
+        <div class="row gx-0">
+            <div class="col-lg-3 bg-white d-none d-lg-block">
+                <a href="index.html" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                    <div class="logo-container">
+                        <h1 class="m-0 text-dark text-uppercase">
+                            <span class="formtea">formtea</span><br>
+                            <span>폼티</span> <!-- 두 줄로 텍스트 작성 -->
+                        </h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <div class="container" style="margin-top: 120px;">
+        <!-- 좌측 업로드 박스 -->
+        <div class="col-md-6">
+            <div class="upload-box">
+                <label for="file-upload">
+                    <i class="fas fa-camera camera-icon"></i>
+                    불러오기
+                </label>
+                <input type="file" id="file-upload" multiple accept="image/*, video/*">
+            </div>
+
+            <!-- 업로드된 파일 미리보기 -->
+            <div class="file-preview-container" id="file-preview">
+                <!-- 업로드된 이미지가 여기에 표시됩니다 -->
+            </div>
+        </div>
+
+        <!-- 우측 글쓰기 영역 -->
+        <div class="col-md-6 form-container">
+            <form id="post-form" action="#" method="post">
+                <div class="mb-3">
+                    <textarea class="form-control" id="content" rows="6" placeholder="어떤 내용인지 설명해주세요!"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">작성 완료</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const fileInput = document.getElementById('file-upload');
+        const filePreview = document.getElementById('file-preview');
+
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            filePreview.innerHTML = '';  // 기존 파일 미리보기 지우기
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    filePreview.appendChild(imgElement);
+                };
+                fileReader.readAsDataURL(file);
+            }
+        });
+
+        // 게시물 작성 폼 제출 시 처리
+        document.getElementById('post-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 폼 제출 시 페이지 리로드 방지
+
+            const content = document.getElementById('content').value; // 제목 없으므로 내용만
+
+            if (content) {
+                // 로컬 스토리지에 게시물 저장
+                let posts = JSON.parse(localStorage.getItem('posts')) || [];
+                posts.push({ content: content });
+                localStorage.setItem('posts', JSON.stringify(posts));
+
+                // 저장 후 알림
+                alert('게시물이 작성되었습니다!');
+                window.location.href = 'service.html'; // 서비스 페이지로 이동
+            }
+        });
+    </script>
+</body>
+</html>

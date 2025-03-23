@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>업체 등록/수정</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Baloo', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            max-width: 1200px;
+            padding: 20px;
+        }
+        .left-section {
+            width: 40%;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+            min-height: 500px;
+            height: auto;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .company-image {
+            width: 80%;
+            max-width: 400px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .company-info {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .company-info h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .company-info p {
+            font-size: 14px;
+            color: #777;
+            line-height: 1.4;
+        }
+        .company-info .address {
+            font-size: 12px;
+            color: #444;
+            margin-top: 5px;
+        }
+        .right-section {
+            width: 60%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-size: 16px;
+            color: #555;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .form-actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn-submit, .btn-update {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover, .btn-update:hover {
+            background-color: #0056b3;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            margin-left: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: #d32f2f;
+        }
+        .delete-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="left-section">
+        <img src="https://via.placeholder.com/400x200" alt="업체 이미지" class="company-image" id="company-image">
+        <div class="delete-icon" id="delete-icon" style="display: none;" onclick="deleteImage()">×</div>
+        <div class="company-info">
+            <h3 id="company-name-display"> </h3>
+            <p id="company-description-display"> </p>
+            <div class="address" id="company-address-display">
+                <strong> </strong> 
+            </div>
+        </div>
+    </div>
+
+    <div class="right-section">
+        <h2>업체 등록/수정</h2>
+        <form id="company-form">
+            <div class="form-group">
+                <label for="company-name">업체명</label>
+                <input type="text" id="company-name" name="company-name" placeholder="업체명을 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="business-number">사업자등록번호</label>
+                <input type="text" id="business-number" name="business-number" placeholder="사업자등록번호를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="phone-number">전화번호</label>
+                <input type="text" id="phone-number" name="phone-number" placeholder="전화번호를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" placeholder="주소를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="description">소개글</label>
+                <textarea id="description" name="description" rows="4" placeholder="업체에 대한 간단한 소개글을 입력하세요" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="company-image-upload">업체 대표사진</label>
+                <input type="file" id="company-image-upload" name="company-image-upload" accept="image/*" onchange="previewImage(event)">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">등록하기</button>
+                <button type="button" class="cancel-btn">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('company-image');
+            output.src = reader.result;
+            document.getElementById('delete-icon').style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function deleteImage() {
+        var output = document.getElementById('company-image');
+        output.src = 'https://via.placeholder.com/400x200';
+        document.getElementById('company-image-upload').value = '';
+        document.getElementById('delete-icon').style.display = 'none';
+    }
+
+    document.getElementById('company-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var companyName = document.getElementById('company-name').value;
+        var phoneNumber = document.getElementById('phone-number').value;
+        var address = document.getElementById('address').value;
+        var description = document.getElementById('description').value;
+        var imageUrl = document.getElementById('company-image').src;
+
+        // localStorage에 데이터 저장
+        localStorage.setItem('companyName', companyName);
+        localStorage.setItem('phoneNumber', phoneNumber);
+        localStorage.setItem('address', address);
+        localStorage.setItem('description', description);
+        localStorage.setItem('imageUrl', imageUrl);
+
+        // 값 저장 확인 (console.log로 확인)
+        console.log(localStorage.getItem('companyName'));
+        console.log(localStorage.getItem('phoneNumber'));
+        console.log(localStorage.getItem('address'));
+        console.log(localStorage.getItem('description'));
+        console.log(localStorage.getItem('imageUrl'));
+
+        window.location.href = 'room.html';  // 등록 후 room.html로 이동
+    });
+</script>
